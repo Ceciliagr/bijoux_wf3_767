@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Article;
+use App\Entity\Categorie;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -33,6 +35,13 @@ class ArticleType extends AbstractType
                     'placeholder'=>'Veuillez saisir le prix de l\'article'
                 ]
             ] )
+
+            ->add('categorie',EntityType::class, [
+                'label'=>false,
+                'class'=>categorie::class,
+                "choice_label"=>"nom"
+            ])
+
             ->add('photo', FileType::class,[
                 'required'=>false,
                 'label'=>false,
@@ -57,12 +66,23 @@ class ArticleType extends AbstractType
                         'placeholder'=>'Veuillez saisir le prix de l\'article'
                     ]
                 ] )
+
+                ->add('categorie',EntityType::class, [
+                    'label'=>false,
+                    'class'=>categorie::class,
+                    "choice_label"=>"nom"
+                ])
+
+
                 ->add('photoModif', FileType::class,[
                     'required'=>false,
                     'label'=>false,
 
                 ])
+
                 ->add('Valider', SubmitType::class)
+
+
             ;
 
             endif;
