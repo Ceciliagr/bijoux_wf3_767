@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Article;
 use App\Form\ArticleType;
+use App\Repository\ArticleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,28 +13,29 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class FrontController extends AbstractController
 {
+
     /**
-     *
-     * @Route("/addArticle",name="addArticle")
+     * @Route("/", name="home")
      */
-    public function addArticle(Request $request, EntityManagerInterface $manager)
+    public function home(ArticleRepository $articleRepository) //on injecte en dépendance le repository d'article pour pouvoir hériter des méthodes présentes dedans
     {
+        // le repository est obligatoirement appelé pour les requete de SELECT
 
-        $article = new Article();
-
-        $form = $this->createForm(ArticleType::class, $article);
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()):
+        $articles=$articleRepository->findAll();
 
 
 
-        endif;
+        return $this->render('front/home.html.twig', [
 
-        return $this->render('front/addArticle.html.twig',[
-            'form'=>$form->createView()
+            'articles'=>$articles
         ]);
 
     }
+
+
+
+
+
+
+
 }

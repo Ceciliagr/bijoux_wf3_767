@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1b3a3ac7-a1d9-461c-ac9d-85ec6511a7f7" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/templates/front/addArticle.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/bijouterie.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/bijouterie.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/commandlinetools/Symfony_07_07_2021_12_35.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/commandlinetools/Symfony_07_07_2021_12_35.xml" afterDir="false" />
+    <list default="true" id="1b3a3ac7-a1d9-461c-ac9d-85ec6511a7f7" name="Default Changelist" comment="Ajout article">
+      <change afterPath="$PROJECT_DIR$/templates/back/categorie.html.twig" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/back/listeArticle.html.twig" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/back/listeCategorie.html.twig" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/back/modifArticle.html.twig" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/front/home.html.twig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/twig.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/twig.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/services.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/services.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/FrontController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/FrontController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Article.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Article.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/ArticleType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/ArticleType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Kernel.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Kernel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/ArticleRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/ArticleRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/base.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/front/addArticle.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/back/addArticle.html.twig" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -167,12 +175,20 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="reference.webide.settings.project.settings.php.zend.framework.tool" />
+    <property name="settings.editor.selected.configurable" value="preferences.editor" />
     <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Cécilia\Desktop\WF3\symfony\bijouterie\templates\back" />
+    </key>
   </component>
   <component name="RunAnythingCache">
     <option name="myCommands">
       <command value="s doctrine:schema:update --force" />
+      <command value="s make:controller" />
+      <command value="s make:entity categorie" />
+      <command value="s make:form categorie" />
       <command value="s cache:clear" />
     </option>
   </component>
@@ -191,8 +207,17 @@
       <option name="presentableId" value="Default" />
       <updated>1625660287411</updated>
       <workItem from="1625660541224" duration="60000" />
-      <workItem from="1625660611381" duration="11905000" />
+      <workItem from="1625660611381" duration="13841000" />
+      <workItem from="1625730087798" duration="20408000" />
     </task>
+    <task id="LOCAL-00001" summary="Ajout article">
+      <created>1625674397886</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1625674397886</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -208,6 +233,11 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Ajout article" />
+    <option name="LAST_COMMIT_MESSAGE" value="Ajout article" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
