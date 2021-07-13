@@ -3,7 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -18,8 +21,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class User implements UserInterface
 {
-    //notre user implementera userInterface hérite a present obligatoirement des methodes de cette interface
-    //getpPassword(), getSalt, getRoles(),EraseCedentials(), getUSername
+    // notre user implémentant userInterface hérite à  présent obligatoirement des méthodes de cette interface
+    // getPassword(), getSalt, getRoles(), eraseCedentials(), getUsername
 
     /**
      * @ORM\Id
@@ -48,11 +51,11 @@ class User implements UserInterface
      */
     private $password;
 
-    public  $confirmPassword;
+    public $confirmPassword;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank(message="Veuillez remplir le champs")
+     *@Assert\NotBlank(message="Veuillez remplir le champs")
      */
     private $nom;
 
@@ -66,6 +69,17 @@ class User implements UserInterface
      * @ORM\Column(type="json")
      */
     private $roles = ["ROLE_USER"];
+
+
+    /**
+     * @ORM\OneToMany(targetEntity=Commande::class, mappedBy="user")
+     */
+    private $commandes;
+
+    public function __construct()
+    {
+        $this->commandes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -144,13 +158,13 @@ class User implements UserInterface
         return $this;
     }
 
-    //getSalt() permet de faire transiter le mot de passe en text brut pour être traité pour l'encodage
+    // getSalt() permet de faire transiter le mot de passe en text brut pour être traité pour l'encodage
     public function getSalt()
     {
         // TODO: Implement getSalt() method.
     }
 
-    //methode  vise a nettoyer les mot de passes en text brut dans la BDD
+    // cette méthode vise à nettoyer les mots de passes en text brut dans la BDD
     public function eraseCredentials()
     {
         // TODO: Implement eraseCredentials() method.
@@ -160,4 +174,36 @@ class User implements UserInterface
     {
         // TODO: Implement @method string getUserIdentifier()
     }
+
+    /**
+     * @return Collection|Commande[]
+     */
+    public function getCommandes(): Collection
+    {
+        return $this->commandes;
+    }
+
+    public function addCommande(Commande $commande): self
+    {
+        if (!$this->commandes->contains($commande)) {
+            $this->commandes[] = $commande;
+            $commande->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommande(Commande $commande): self
+    {
+        if ($this->commandes->removeElement($commande)) {
+            // set the owning side to null (unless already changed)
+            if ($commande->getUser() === $this) {
+                $commande->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+
 }

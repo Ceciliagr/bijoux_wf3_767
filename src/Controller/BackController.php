@@ -8,10 +8,12 @@ use App\Form\ArticleType;
 use App\Form\CategorieType;
 use App\Repository\ArticleRepository;
 use App\Repository\CategorieRepository;
+use App\Service\Panier\PanierService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class BackController extends AbstractController
@@ -74,7 +76,7 @@ class BackController extends AbstractController
      */
     public function listeArticle(ArticleRepository $articleRepository)
     {
-       $articles=$articleRepository->findAll();
+        $articles=$articleRepository->findAll();
 
 
         return $this->render('back/listeArticle.html.twig',[
@@ -153,7 +155,7 @@ class BackController extends AbstractController
     {
 
         if (!$categorie):
-        $categorie=new Categorie();
+            $categorie=new Categorie();
         endif;
 
 
@@ -168,7 +170,7 @@ class BackController extends AbstractController
 
             return $this->redirectToRoute('listeCategorie');
 
-            endif;
+        endif;
 
         return $this->render("back/categorie.html.twig",[
 
@@ -196,14 +198,82 @@ class BackController extends AbstractController
      */
     public function deleteCategorie(EntityManagerInterface $manager, Categorie $categorie)
     {
-    $manager->remove($categorie);
-    $manager->flush();
-    $this->addFlash('success', 'La catégorie a bien été supprimée');
-    return $this->redirectToRoute('listeCategorie');
+        $manager->remove($categorie);
+        $manager->flush();
+        $this->addFlash('success', 'La catégorie a bien été supprimée');
+        return $this->redirectToRoute('listeCategorie');
 
 
 
     }
+
+
+
+    /**
+     *@Route("/addPanier/{id}/{param}", name="addPanier")
+     */
+    public function addPanier( PanierService $panierService,$id, $param)
+    {
+
+        $panierService->add($id);
+        $panier=$panierService->getFullPanier();
+        $total=$panierService->getTotal();
+
+
+        if ($param!=='home'):
+            return $this->redirectToRoute('panier',[
+                'panier'=>$panier,
+                'total'=>$total
+
+            ]);
+        else:
+            return $this->redirectToRoute('home',[
+                'panier'=>$panier,
+                'total'=>$total
+
+            ]);
+        endif;
+
+    }
+
+
+    /**
+     *@Route("/removePanier/{id}", name="removePanier")
+     */
+    public function removePanier($id, PanierService $panierService)
+    {
+
+        $panierService->remove($id);
+        $panier=$panierService->getFullPanier();
+        $total=$panierService->getTotal();
+
+        return $this->redirectToRoute('panier',[
+            'panier'=>$panier,
+            'total'=>$total
+
+        ]);
+
+    }
+
+    /**
+     *@Route("/deletePanier/{id}", name="deletePanier")
+     */
+    public function deletePanier($id, PanierService $panierService)
+    {
+
+        $panierService->delete($id);
+        $panier=$panierService->getFullPanier();
+        $total=$panierService->getTotal();
+
+        return $this->redirectToRoute('panier',[
+            'panier'=>$panier,
+            'total'=>$total
+
+        ]);
+
+    }
+
+
 
 
 
