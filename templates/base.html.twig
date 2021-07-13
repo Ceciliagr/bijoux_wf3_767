@@ -54,12 +54,12 @@
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user fa-2x"></i> {{ app.user.username }}</a>
                     <div class="dropdown-menu">
                         <a class="dropdown-item" href="#"><i class="fas fa-user"></i> Profil</a>
-                        <a class="dropdown-item" href="{{ path('panier') }}"><i class="fas fa-shopping-bag"></i> Panier</a>
+                        <a class="dropdown-item" href="{{ path('listeCommande') }}"><i class="fas fa-shopping-bag"></i>Commandes</a>
                         {% if is_granted('ROLE_ADMIN') %}
                             <a class="dropdown-item" href="{{ path('addArticle') }}"><i class="fas fa-cogs"></i> Panel Admin</a>
                         {% endif %}
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{{ path('logout')}}"><i class="fas fa-sign-out-alt"></i> Déconexion</a>
+                        <a class="dropdown-item" href="{{ path('logout')}}"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
                     </div>
                 </li>
                 {% endif %}

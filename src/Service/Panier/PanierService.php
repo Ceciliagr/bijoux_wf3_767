@@ -21,7 +21,7 @@ class PanierService
     }
 
 
-    public function add(int $id)
+    public function add(int $id, $param=null)
     {
         $panier = $this->session->get('panier', []); // si le panier n'existe pas il sera initialisé en session par un array vide []
 
@@ -42,10 +42,10 @@ class PanierService
         $panier = $this->session->get('panier', []);
 
         if (!empty($panier[$id]) && $panier[$id]>1):
-            $panier[$id]--; // si on a au minimum 2 articles en panier, on décrémente la quantité
+        $panier[$id]--; // si on a au minimum 2 articles en panier, on décrémente la quantité
 
         else:
-            unset($panier[$id]); //sinon on vide la ligne en session
+        unset($panier[$id]); //sinon on vide la ligne en session
         endif;
 
         $this->session->set('panier',$panier);
@@ -58,9 +58,9 @@ class PanierService
 
         if (!empty($panier[$id])):
             unset($panier[$id]);
-        endif;
+            endif;
 
-        $this->session->set('panier', $panier);
+            $this->session->set('panier', $panier);
 
     }
 
@@ -73,7 +73,7 @@ class PanierService
 
     public function getFullPanier()
     {
-        // panier[]= $id=>quantité
+     // panier[]= $id=>quantité
 
         $panier=$this->session->get('panier', []);
 
@@ -81,28 +81,31 @@ class PanierService
 
         foreach ($panier as $id => $quantite):
             $panierDetail[]=[
-                'article'=>$this->articleRepository->find($id),
-                'quantite'=>$quantite
+              'article'=>$this->articleRepository->find($id),
+              'quantite'=>$quantite
 
             ];
 
-        endforeach;
+            endforeach;
 
-        return $panierDetail;
+            return $panierDetail;
 
     }
 
     public function getTotal()
     {
-        $total=0;
 
-        foreach ($this->getFullPanier() as $item): // $this->>getFullPanier() nous retourne notre tableau multidimmensionnel $panierDetail
 
-            $total += $item['article']->getPrix()* $item['quantite']; // par ligne d'article différents, on multipli le prix de l'article par la quantité commandé que l'on incrémente à notre total
+      $total=0;
 
-        endforeach;
 
-        return $total;
+      foreach ($this->getFullPanier() as $item): // $this->>getFullPanier() nous retourne notre tableau multidimmensionnel $panierDetail
+
+          $total += $item['article']->getPrix()* $item['quantite']; // par ligne d'article différents, on multipli le prix de l'article par la quantité commandé que l'on incrémente à notre total
+
+          endforeach;
+
+          return $total;
 
 
     }

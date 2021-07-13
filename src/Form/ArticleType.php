@@ -35,19 +35,17 @@ class ArticleType extends AbstractType
                     'placeholder'=>'Veuillez saisir le prix de l\'article'
                 ]
             ] )
-
-            ->add('categorie',EntityType::class, [
-                'label'=>false,
-                'class'=>categorie::class,
-                "choice_label"=>"nom"
-            ])
-
             ->add('photo', FileType::class,[
                 'required'=>false,
                 'label'=>false,
 
             ])
             ->add('Valider', SubmitType::class)
+            ->add('categorie', EntityType::class,[
+                "label"=>false,
+                "class"=>Categorie::class,
+                "choice_label"=>"nom"
+            ])
         ;
         else:
 
@@ -66,23 +64,17 @@ class ArticleType extends AbstractType
                         'placeholder'=>'Veuillez saisir le prix de l\'article'
                     ]
                 ] )
-
-                ->add('categorie',EntityType::class, [
-                    'label'=>false,
-                    'class'=>categorie::class,
-                    "choice_label"=>"nom"
-                ])
-
-
                 ->add('photoModif', FileType::class,[
                     'required'=>false,
                     'label'=>false,
 
                 ])
-
                 ->add('Valider', SubmitType::class)
-
-
+                ->add('categorie', EntityType::class,[
+                    "label"=>false,
+                    "class"=>Categorie::class,
+                    "choice_label"=>"nom"
+                ])
             ;
 
             endif;

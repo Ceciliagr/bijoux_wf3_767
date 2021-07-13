@@ -32,7 +32,6 @@
                 <td>{{ article.prix }} €</td>
                 <td><img height="40" width="40" src="{{ asset('upload/') }}{{ article.photo }}" alt=""></td>
                 <td>{{ article.categorie.nom }}</td>
-
                 <td>
                     <a class="btn btn-primary" href="{{ path('modifArticle', {'id':article.id }) }}">Modifier</a>
                     <a class="btn btn-danger" href="{{ path('deleteArticle', {'id':article.id }) }}">Supprimer</a>

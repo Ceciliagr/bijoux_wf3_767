@@ -8,18 +8,22 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class SecurityController extends AbstractController
 {
+
     /**
      * @Route("/register", name="register")
      */
-    public function registration(EntityManagerInterface $manager,Request $request, UserPasswordEncoderInterface $encoder)
+    public function registration(EntityManagerInterface $manager, Request $request, UserPasswordEncoderInterface $encoder)
     {
 
-        //USerPasswordInterface pour pouvoir fonctionner attends l'objet User,que celui ci hérite de la class UserInterface, qui attend des méthodes bien spécifiques a implementer afin du bon fonctionnement de l'autentification
+        //UserPasswordEncoderInterface  pour pouvoir fonctionner attends l'objet User, que celui ci herite de la class UserInterface, qui attend des méthode
+        //bien spécifiques à implementer afin de s'assurer du bon fonctionnement de l'authentification
 
         $user=new User();
 
@@ -27,29 +31,32 @@ class SecurityController extends AbstractController
         $form->handleRequest($request);
 
 
-        if($form->isSubmitted() && $form->isValid()):
+        if ($form->isSubmitted() && $form->isValid()):
+
 
             $hash=$user->getPassword();
-            $hashPassword=$encoder->encodePassword($user, $hash);
+        $hashpassword=$encoder->encodePassword($user, $hash);
 
-            $user->setPassword($hashPassword);
-            $manager->persist($user);
-            $manager->flush();
+        $user->setPassword($hashpassword);
+        $manager->persist($user);
+        $manager->flush();
 
-            $this->addFlash('success', 'Félicitation votre a bien été créé,Connectez vous a présent');
-            return $this->redirectToRoute('home');
-
+        $this->addFlash('success', 'Félicitation votre compte a bien été créé, connectez vous à présent');
+        return $this->redirectToRoute('home');
             endif;
 
 
 
         return $this->render('security/registration.html.twig',[
-            'form'=>$form->createView()
+           'form'=>$form->createView()
+
         ]);
+
     }
 
+
     /**
-     * @Route ("/login", name="login")
+     *@Route("/login", name="login")
      */
     public function login()
     {
@@ -59,23 +66,14 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/logout", name="logout")
+     * @Route ("/logout", name="logout")
      */
     public function logout()
     {
-
-        return $this->redirectToRoute('home');
 
     }
 
 
 
 
-
-
-
-
-
-
-
-}//fin
+}
