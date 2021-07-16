@@ -6,11 +6,14 @@ use App\Entity\Achat;
 use App\Entity\Article;
 use App\Entity\Categorie;
 use App\Entity\Commande;
+use App\Entity\Matiere;
 use App\Form\ArticleType;
 use App\Form\CategorieType;
+use App\Form\MatiereType;
 use App\Repository\ArticleRepository;
 use App\Repository\CategorieRepository;
 use App\Repository\CommandeRepository;
+use App\Repository\MatiereRepository;
 use App\Repository\UserRepository;
 use App\Service\Panier\PanierService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,6 +22,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Validator\Constraints\Uuid;
 
 class BackController extends AbstractController
 {
@@ -303,7 +308,7 @@ class BackController extends AbstractController
 
         $this->addFlash('success', 'Votre commande a été prise en compte');
 
-        return $this->redirectToRoute('listeCommande');
+       return $this->redirectToRoute('listeCommande');
 
     }
 
@@ -313,11 +318,11 @@ class BackController extends AbstractController
     public function listeCommande(CommandeRepository $commandeRepository)
     {
 
-        $commandes = $commandeRepository->findBy(['user' => $this->getUser()]);
+        $commandes=$commandeRepository->findBy(['user'=>$this->getUser()]);
 
-        return $this->render('front/listeCommande.html.twig', [
+        return $this->render('front/listeCommande.html.twig',[
 
-            'commandes' => $commandes]);
+        'commandes'=>$commandes]);
 
 
     }
@@ -328,11 +333,11 @@ class BackController extends AbstractController
     public function gestionCommande(CommandeRepository $commandeRepository)
     {
 
-        $commandes = $commandeRepository->findBy([], ['statut' => 'ASC']);
+        $commandes=$commandeRepository->findBy([], ['statut'=>'ASC']);
 
-        return $this->render('back/gestionCommande.html.twig', [
+        return $this->render('back/gestionCommande.html.twig',[
 
-            'commandes' => $commandes]);
+            'commandes'=>$commandes]);
 
     }
 
@@ -341,7 +346,7 @@ class BackController extends AbstractController
      */
     public function statut(CommandeRepository $commandeRepository, EntityManagerInterface $manager, $id, $param)
     {
-        $commande = $commandeRepository->find($id);
+        $commande=$commandeRepository->find($id);
 
         $commande->setStatut($param);
         $manager->persist($commande);
@@ -356,33 +361,33 @@ class BackController extends AbstractController
      */
     public function sendMail(Request $request)
     {
-        $transporter = (new \Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl'))
-            ->setUsername('767Paris4@gmail.com')
-            ->setPassword('Session767Paris4');
+        $transporter=(new \Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl'))
+        ->setUsername('767Paris4@gmail.com')
+        ->setPassword('Session767Paris4');
 
-        $mailer = new \Swift_Mailer($transporter);
+        $mailer=new \Swift_Mailer($transporter);
 
-        $mess = $request->request->get('message');
-        $name = $request->request->get('name');
-        $surname = $request->request->get('surname');
-        $subject = $request->request->get('need');
-        $from = $request->request->get('email');
+        $mess=$request->request->get('message');
+        $name=$request->request->get('name');
+        $surname=$request->request->get('surname');
+        $subject=$request->request->get('need');
+        $from=$request->request->get('email');
 
-        $message = (new \Swift_Message($subject))
+        $message=(new \Swift_Message($subject))
             ->setFrom($from)
             ->setTo('767Paris4@gmail.com');
 
-        $cid = $message->embed(\Swift_Image::fromPath('upload/logo.png'));
+        $cid=$message->embed(\Swift_Image::fromPath('upload/logo.png'));
         $message->setBody(
-            $this->renderView('mail/mail_template.html.twig', [
-                'from' => $from,
-                'name' => $name,
-                'surname' => $surname,
-                'subject' => $subject,
-                'message' => $mess,
-                'logo' => $cid,
-                'objectif' => 'Acceder au site',
-                'liens' => "http://127.0.0.1:8001"
+            $this->renderView('mail/mail_template.html.twig',[
+                'from'=>$from,
+                'name'=>$name,
+                'surname'=>$surname,
+                'subject'=>$subject,
+                'message'=>$mess,
+                'logo'=>$cid,
+                'objectif'=>'Accéder au site',
+                'liens'=>'http://127.0.0.1:8000'
 
             ]),
             'text/html'
@@ -391,7 +396,9 @@ class BackController extends AbstractController
         $mailer->send($message);
 
         $this->addFlash('success', 'l\'email a bien été transmis');
-        return $this->redirectToRoute('home');
+     return $this->redirectToRoute('home');
+
+
 
 
     }
@@ -401,7 +408,7 @@ class BackController extends AbstractController
      */
     public function mailForm()
     {
-        return $this->render('mail/mail_form.html.twig');
+       return $this->render('mail/mail_form.html.twig');
     }
 
 
@@ -419,102 +426,180 @@ class BackController extends AbstractController
      */
     public function forgotPassword(Request $request, UserRepository $repository, EntityManagerInterface $manager)
     {
+
         if ($_POST):
 
-            $email = $request->request->get('email');
+            $email=$request->request->get('email');
 
-            $user = $repository->findOneBy(['email' => $email]);
+            $user=$repository->findOneBy(['email'=>$email]);
+            $mail = $user->getId();
 
             if ($user):
-                $transporter = (new \Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl'))
-                    ->setUsername('767Paris4@gmail.com')
-                    ->setPassword('Session767Paris4');
+            $transporter=(new \Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl'))
+                ->setUsername('767Paris4@gmail.com')
+                ->setPassword('Session767Paris4');
 
-                $mailer = new \Swift_Mailer($transporter);
+            $mailer=new \Swift_Mailer($transporter);
 
-                $mess = 'Vous avez fait une demande de réinitialisation de mot de passe, veuillez cliquez sur le lien si dessous';
-                $name = "";
-                $surname = "";
-                $subject = "Mot de passe oublié";
-                $from = '767Paris4@gmail.com';
+            $mess="Vous avez fait une demande de réinitialisation de mot de passe, veuillez cliquez sur le liens ci-dessous ";
+            $name="";
+            $surname="";
+            $subject="Mot de passe oublié";
+            $from='767Paris4@gmail.com';
 
-                $message = (new \Swift_Message($subject))
-                    ->setFrom($from)
-                    ->setTo($email);
-                //$mail = urlencode($email);
-                $mail = $user->getId();
-                $token = uniqid();
-                $user->setReset($token);
-                $manager->persist($user);
-                $manager->flush();
+            $message=(new \Swift_Message($subject))
+                ->setFrom($from)
+                ->setTo($email);
 
-                $cid = $message->embed(\Swift_Image::fromPath('upload/logo.png'));
-                $message->setBody(
-                    $this->renderView('mail/mail_template.html.twig', [
-                        'from' => $from,
-                        'name' => $name,
-                        'surname' => $surname,
-                        'subject' => $subject,
-                        'message' => $mess,
-                        'logo' => $cid,
-                        'objectif' => 'Réinitialiser',
-                        'liens' => 'http://127.0.0.1:8001/resetToken/' . $mail . '/' . $token
+            $token=uniqid();
 
-                    ]),
-                    'text/html'
+            $user->setReset($token);
+            $manager->persist($user);
+            $manager->flush();
 
-                );
-                $mailer->send($message);
 
-                $this->addFlash('succes', 'Un liend de réinitialisation vous été envoyé par mail');
 
-                return $this->redirectToRoute('forgotPassword');
+            $cid=$message->embed(\Swift_Image::fromPath('upload/logo.png'));
+            $message->setBody(
+                $this->renderView('mail/mail_template.html.twig',[
+                    'from'=>$from,
+                    'name'=>$name,
+                    'surname'=>$surname,
+                    'subject'=>$subject,
+                    'message'=>$mess,
+                    'logo'=>$cid,
+                    'objectif'=>'Réinitialiser',
+                    'liens'=>'http://127.0.0.1:8000/resetToken/'.$mail.'/'.$token
+
+                ]),
+                'text/html'
+
+            );
+            $mailer->send($message);
+
+                $this->addFlash('success', 'Un liens de réinitialisation vous a été envoyé à votre adresse mail');
+                $this->redirectToRoute('forgotPassword');
 
             else:
-                $this->addFlash('error', 'Aucun utilisateur ne correspond a cet email');
 
-                return $this->redirectToRoute('forgotPassword');
+                $this->addFlash('error', 'Aucun utilisateur ne correspond à cet Email');
+            $this->redirectToRoute('forgotPassword');
+                endif;
 
-            endif;
+
+
         endif;
 
 
         return $this->render('security/forgotPassword.html.twig');
+
     }
 
-
     /**
-     * @Route("/resetToken/{email}/{token}", name="resetToken")
+     * @Route("/resetToken/{email}/{token}")
      */
     public function resetToken($email, $token, UserRepository $repository)
     {
-        $mail = $email;
-        //$mail = urldecode($email);
-        $user = $repository->findOneBy(['id' => $mail, 'reset' => $token]);
 
+
+        $mail=urldecode($email);
+        $user=$repository->findOneBy(['id'=>$email, 'reset'=>$token]);
+        //dd($user);
         if ($user):
-
-            return $this->redirectToRoute('resetPassword', [
-                'id'=>$user->getId()
-            ]);
-        else :
-            $this->addFlash('error', 'Une erreur est survenus, veuillez refaire une demande de réinitialisation');
+        return $this->render('security/resetPassword.html.twig',[
+            'id'=>$user->getId()
+        ]);
+        else:
+        $this->addFlash('error', 'Une erreur s\'est produite, veuillez refaire une demande de réinitialisation');
             return $this->redirectToRoute('login');
+            endif;
 
-        endif;
     }
 
     /**
      * @Route("/resetPassword", name="resetPassword")
      */
-    public function resetPassword()
+    public function resetPassword(Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder, UserRepository $repository)
     {
 
         if ($_POST):
+        $password=$request->request->get('password');
+        $confirmPassword=$request->request->get('confirmPassword');
+        $id=$request->request->get('id');
 
+//        dd($password, $confirmPassword, $id);
+        if ($password == $confirmPassword):
+            $user=$repository->find($id);
+        $hash=$encoder->encodePassword($user, $password);
+            $user->setPassword($hash);
+            $user->setReset(null);
+            $manager->persist($user);
+            $manager->flush();
+            $this->addFlash('success', 'Votre mot de passe a bien été modifié, connectez vous à présent');
+            return $this->redirectToRoute('login');
+            else:
+                $this->addFlash('error', 'Vos mot de passe ne correspondent pas, veuillez les saisir à nouveau');
+                return $this->render('security/resetPassword.html.twig',[
+                    'id'=>$id
+                ]);
             endif;
+
+        endif;
+
         return $this->render('security/resetPassword.html.twig');
     }
+
+
+    /**
+     * @Route("/addMatiere", name="addMatiere")
+     * @Route ("/modifMatiere/{id}", name="modifMatiere")
+     */
+    public function addMatiere(Request $request, EntityManagerInterface  $manager, MatiereRepository $repository, $id = null)
+    {
+        $matieres= $repository->findAll();
+
+        if ($id == null):
+        $matiere = new Matiere();
+        else :
+
+            $matiere = $repository->find($id);
+
+        endif;
+
+        $form = $this->createForm(MatiereType::class, $matiere);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()):
+
+            $manager->persist($matiere);
+            $manager->flush();
+        return $this->redirectToRoute('addMatiere');
+            endif;
+
+    return $this->render('back/addMatiere.html.twig',[
+        'form'=>$form->createView(),
+        'matieres'=>$matieres
+
+    ]);
+    }
+
+    /**
+     * @Route("/deleteMatiere/{id}", name="deleteMatiere")
+     */
+    public function deleteMatiere(Matiere $matiere, EntityManagerInterface $manager,$id=null)
+    {
+
+        $manager->remove($matiere);
+        $manager->flush();
+
+        $this->addFlash('sucess', 'vous avez bien supprimer la matière');
+
+    return $this->redirectToRoute('addMatiere');
+    }
+
+
+
+
 
 
 }

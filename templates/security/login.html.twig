@@ -6,6 +6,16 @@
 
 
 {% block body %}
+    {% for message in app.flashes('success') %}
+        <div class="row justify-content-center mt-4">
+            <div class="alert alert-success col-md-6 text-center">{{ message }}</div>
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('error') %}
+        <div class="row justify-content-center mt-4">
+            <div class="alert alert-danger col-md-6 text-center">{{ message }}</div>
+        </div>
+    {% endfor %}
     <div class="row justify-content-center mt-4">
         <div class="col-md-6">
             <form method="post" action="{{ path('login') }}">
@@ -16,8 +26,9 @@
                 <div >
                     <label for="">Mot de passe</label>
                     <input class="form-control" placeholder="Saisissez votre mot de passe" type="password" name="_password">
+                    <a href="{{ path('forgotPassword') }}">Mot de passe oublié?</a>
                 </div>
-                <a href="{{ path('forgotPassword') }}">Mot de passe oublié ?</a>
+
                 <button class="btn btn-primary mt-4" type="submit">Se connecter</button>
             </form>
         </div>
